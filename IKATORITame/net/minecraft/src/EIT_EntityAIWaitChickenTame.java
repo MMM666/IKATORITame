@@ -1,4 +1,4 @@
-package net.minecraft.src;
+﻿package net.minecraft.src;
 
 public class EIT_EntityAIWaitChickenTame extends EntityAIBase {
 

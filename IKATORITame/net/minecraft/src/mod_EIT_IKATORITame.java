@@ -1,4 +1,4 @@
-package net.minecraft.src;
+ï»¿package net.minecraft.src;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -33,10 +33,10 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	@Override
 	public void load() {
 		if (isReplaceSquid) {
-			// EntitySquid‚Ìƒƒ\ƒbƒh‚ğƒ`ƒFƒbƒN‚µ‚ÄSquid‚Ì’u‚«Š·‚¦‚ª•K—v‚©‚Ç‚¤‚©”»’è
+			// EntitySquidã®ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ãƒã‚§ãƒƒã‚¯ã—ã¦Squidã®ç½®ãæ›ãˆãŒå¿…è¦ã‹ã©ã†ã‹åˆ¤å®š
 			Method method1 = null;
 			try {
-				// Jar‚É‚¢‚ê‚Ä‚é‚Ì‚©‚¢H
+				// Jarã«ã„ã‚Œã¦ã‚‹ã®ã‹ã„ï¼Ÿ
 				method1 = EntitySquid.class.getDeclaredMethod("isTamed", new Class[] {});
 				System.out.println("is IKA Tame.");
 			}
@@ -46,7 +46,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			if (method1 == null) {
 				Method method2;
 				try {
-					// ƒCƒJ‚Ì’u‚«Š·‚¦
+					// ã‚¤ã‚«ã®ç½®ãæ›ãˆ
 					try {
 						method2 = (net.minecraft.src.EntityList.class).getDeclaredMethod("a", new Class[] {
 								java.lang.Class.class, java.lang.String.class, Integer.TYPE
@@ -60,7 +60,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 					method2.setAccessible(true);
 					method2.invoke(null, new Object[] {EIT_EntitySquid.class, "Squid", 94});
 					
-					// ƒoƒCƒI[ƒ€‚Ì”­¶ˆ—‚ğ‚Ì‚Á‚Æ‚é
+					// ãƒã‚¤ã‚ªãƒ¼ãƒ ã®ç™ºç”Ÿå‡¦ç†ã‚’ã®ã£ã¨ã‚‹
 					for (int i = 0; i < BiomeGenBase.biomeList.length; i++) {
 						List<SpawnListEntry> mobs = BiomeGenBase.biomeList[i].spawnableWaterCreatureList;
 						for (int j = 0; j < mobs.size(); j++) {
@@ -76,10 +76,10 @@ public class mod_EIT_IKATORITame extends BaseMod {
 		}
 
 		if (isReplaceChicken) {
-			// EntityChecken‚Ìƒƒ\ƒbƒh‚ğƒ`ƒFƒbƒN‚µ‚ÄChecken‚Ì’u‚«Š·‚¦‚ª•K—v‚©‚Ç‚¤‚©”»’è
+			// EntityCheckenã®ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ãƒã‚§ãƒƒã‚¯ã—ã¦Checkenã®ç½®ãæ›ãˆãŒå¿…è¦ã‹ã©ã†ã‹åˆ¤å®š
 			Method method1 = null;
 			try {
-				// Jar‚É‚¢‚ê‚Ä‚¤‚Ì‚©‚¢H
+				// Jarã«ã„ã‚Œã¦ã†ã®ã‹ã„ï¼Ÿ
 				method1 = EntityChicken.class.getDeclaredMethod("isTamed", new Class[] {});
 				System.out.println("is TORI Tame.");
 			}
@@ -89,7 +89,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			if (method1 == null) {
 				Method method2;
 				try {
-					// ƒgƒŠ‚Ì’u‚«Š·‚¦
+					// ãƒˆãƒªã®ç½®ãæ›ãˆ
 					try {
 						method2 = (net.minecraft.src.EntityList.class).getDeclaredMethod("a", new Class[] {
 								java.lang.Class.class, java.lang.String.class, Integer.TYPE
@@ -103,7 +103,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 					method2.setAccessible(true);
 					method2.invoke(null, new Object[] {EIT_EntityChicken.class, "Chicken", 93});
 					
-					// ƒoƒCƒI[ƒ€‚Ì”­¶ˆ—‚ğ‚Ì‚Á‚Æ‚é
+					// ãƒã‚¤ã‚ªãƒ¼ãƒ ã®ç™ºç”Ÿå‡¦ç†ã‚’ã®ã£ã¨ã‚‹
 					for (int i = 0; i < BiomeGenBase.biomeList.length; i++) {
 						List<SpawnListEntry> mobs = BiomeGenBase.biomeList[i].spawnableCreatureList;
 						for (int j = 0; j < mobs.size(); j++) {
@@ -116,7 +116,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 				catch (Exception e) {
 				}
 				
-				// —‘‚Ì’u‚«Š·‚¦
+				// åµã®ç½®ãæ›ãˆ
 				Item.itemsList[256 + 88] = null;
 				Item.egg = (new EIT_ItemEgg(88)).setIconCoord(12, 0).setItemName("egg");
 				ModLoader.addDispenserBehavior(Item.egg, new EIT_BehaviorEggDispense(null));
@@ -127,7 +127,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	@Override
 	public void addRenderer(Map map) {
 		if (isReplaceChicken) {
-			// Œ{‚ÌƒŒƒ“ƒ_[‚ğ’Ç‰ÁAŒ³‚Ì‚Í•Ê‚ÉÁ‚µ‚Ä‚È‚¢
+			// é¶ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚’è¿½åŠ ã€å…ƒã®ã¯åˆ¥ã«æ¶ˆã—ã¦ãªã„
 			map.put(EIT_EntityChicken.class, new EIT_RenderChickenTame(new ModelChicken(), 0.3F));
 		}
 	}
