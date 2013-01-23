@@ -1,4 +1,4 @@
-ï»¿package net.minecraft.src;
+package net.minecraft.src;
 
 public class EIT_RenderChickenTame extends RenderChicken {
 
@@ -9,9 +9,9 @@ public class EIT_RenderChickenTame extends RenderChicken {
     @Override
     public void renderChicken(EntityChicken entitychicken, double d, double d1, double d2, 
             float f, float f1) {
-    	// è¿½è¨˜
+    	// ’Ç‹L
         if (((EIT_EntityChicken)entitychicken).isShitting()) {
-    		// è¶³æ¶ˆã—ã€ä½ç½®ä¸‹ã’
+    		// ‘«Á‚µAˆÊ’u‰º‚°
             ((ModelChicken)mainModel).rightLeg.showModel = false;
             ((ModelChicken)mainModel).leftLeg.showModel = false;
 //            d1 -= 0.29999999999999999D;
@@ -20,7 +20,7 @@ public class EIT_RenderChickenTame extends RenderChicken {
 
         super.renderChicken(entitychicken, d, d1, d2, f, f1);
         
-        // å¾Œå§‹æœ«
+        // Œãn––
         ((ModelChicken)mainModel).rightLeg.showModel = true;
         ((ModelChicken)mainModel).leftLeg.showModel = true;
     }

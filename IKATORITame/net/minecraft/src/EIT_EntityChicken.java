@@ -1,4 +1,4 @@
-ï»¿package net.minecraft.src;
+package net.minecraft.src;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class EIT_EntityChicken extends EntityChicken {
 		setFullFrontal(false);
 		
 		try {
-			// æ—¢å­˜ã®AIã‚’ã‚¯ãƒªã‚¢
+			// Šù‘¶‚ÌAI‚ğƒNƒŠƒA
 			List llist = (List) ModLoader.getPrivateValue(EntityAITasks.class, tasks, 0);
 			llist.clear();
 		} catch (Error e) {
@@ -59,7 +59,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		// ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ãƒ•ãƒ©ã‚°
+		// ƒŠƒAƒ‹ƒ^ƒCƒ€ƒtƒ‰ƒO
 		// 00000100 : Tame
 		// 00001000 : Incubator
 		// 00010000 : FullFrontal
@@ -97,7 +97,7 @@ public class EIT_EntityChicken extends EntityChicken {
 
 	@Override
 	protected boolean isMovementCeased() {
-		// ç§»å‹•æŠ‘åˆ¶
+		// ˆÚ“®—}§
 		return isShitting();
 	}
 
@@ -116,7 +116,7 @@ public class EIT_EntityChicken extends EntityChicken {
 				return (double) (yOffset + 0.0F);
 			}
 			if (ridingEntity instanceof EntityChicken) {
-				// è¶³ã®éè¡¨ç¤ºã«ã‚ˆã‚‹é«˜ã•å¤‰æ›´ã®å›é¿
+				// ‘«‚Ì”ñ•\¦‚É‚æ‚é‚‚³•ÏX‚Ì‰ñ”ğ
 				if (ridingEntity.ridingEntity == null) {
 					return (double) (yOffset) + 0.15D;
 				} else {
@@ -137,7 +137,7 @@ public class EIT_EntityChicken extends EntityChicken {
 
 	@Override
 	public String getTexture() {
-		// ã²ã‚ˆã“ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¯åˆ¥
+		// ‚Ğ‚æ‚±‚ÌƒeƒNƒXƒ`ƒƒ‚Í•Ê
 		return (mod_EIT_IKATORITame.isChickTexture && isChild()) ? textureChick
 				: fFullFrontal ? textureChickenFrontal : texture;
 	}
@@ -176,11 +176,11 @@ public class EIT_EntityChicken extends EntityChicken {
 
 	@Override
 	public boolean interact(EntityPlayer entityplayer) {
-		// ãªã§ã‚Šåˆ¤å®š
+		// ‚È‚Å‚è”»’è
 		if (entityplayer != null) {
 			ItemStack itemstack = entityplayer.getCurrentEquippedItem();
 			if (!worldObj.isRemote) {
-				// ã‚€ã—ã‚‹
+				// ‚Ş‚µ‚é
 				if (itemstack != null
 						&& itemstack.getItem() instanceof ItemShears) {
 					if (canFrontal()) {
@@ -193,7 +193,7 @@ public class EIT_EntityChicken extends EntityChicken {
 							entityitem.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
 						}
 						itemstack.damageItem(1, entityplayer);
-						// ç”Ÿãˆå¤‰ã‚ã‚Šã‚«ã‚¦ãƒ³ã‚¿
+						// ¶‚¦•Ï‚í‚èƒJƒEƒ“ƒ^
 						setGrowingAge(36000);
 					}
 					return true;
@@ -205,7 +205,7 @@ public class EIT_EntityChicken extends EntityChicken {
 					return true;
 				}
 				if (itemstack == null && isTamed()) {
-					// ç„¡æ‰‹
+					// –³è
 					// RIDE-ON
 					Entity entity1 = entityplayer;
 					if (entity1.riddenByEntity != this) {
@@ -213,7 +213,7 @@ public class EIT_EntityChicken extends EntityChicken {
 						}
 					}
 					if (isIncubator() && ridingEntity == null) {
-						// å¾…æ©Ÿè§£é™¤ã§åµã‚’ãƒ‰ãƒ­ãƒƒãƒ—
+						// ‘Ò‹@‰ğœ‚Å—‘‚ğƒhƒƒbƒv
 						entityDropItem(getIncubator(), 0.0F);
 						setIncubator(null);
 					}
@@ -225,7 +225,7 @@ public class EIT_EntityChicken extends EntityChicken {
 				// Client
 			}
 			if (itemstack != null && itemstack.stackSize > 0) {
-				// é¤Œ
+				// ‰a
 				if (itemstack.getItem() instanceof ItemSeeds) {
 					if (eatBeans()) {
 						if (!super.interact(entityplayer)) {
@@ -246,7 +246,7 @@ public class EIT_EntityChicken extends EntityChicken {
 					return true;
 				}
 				if (isTamed()) {
-					// å¾…æ©Ÿ
+					// ‘Ò‹@
 					if (itemstack.getItem() instanceof ItemEgg) {
 						if (!isIncubator()) {
 							setIncubator(itemstack.splitStack(1));
@@ -258,7 +258,7 @@ public class EIT_EntityChicken extends EntityChicken {
 						}
 					} else if (itemstack.itemID == Item.feather.itemID) {
 						// RIDE-ON
-						// ãƒˆãƒªã«ä¹—ã‚‹
+						// ƒgƒŠ‚Éæ‚é
 						if (!entityplayer.capabilities.isCreativeMode) {
 							if (--itemstack.stackSize <= 0) {
 								entityplayer.inventory.setInventorySlotContents(
@@ -273,7 +273,7 @@ public class EIT_EntityChicken extends EntityChicken {
 				}
 			}
 			if (isIncubator()) {
-				// åµã®é–‹æ”¾
+				// —‘‚ÌŠJ•ú
 				if (!worldObj.isRemote) {
 					entityDropItem(getIncubator(), 0.0F);
 				}
@@ -286,9 +286,9 @@ public class EIT_EntityChicken extends EntityChicken {
 
 	@Override
 	public void onLivingUpdate() {
-		// Ride-onã§æ¥åœ°åˆ¤å®š
+		// Ride-on‚ÅÚ’n”»’è
 		if (isRiding() && mod_EIT_IKATORITame.isChickenGride && ridingEntity != null) {
-			// ã‚°ãƒ©ã‚¤ãƒ‰åˆ¤å®š
+			// ƒOƒ‰ƒCƒh”»’è
 			Entity entity;
 			for (entity = ridingEntity; entity.ridingEntity != null; entity = entity.ridingEntity) {
 			}
@@ -302,23 +302,23 @@ public class EIT_EntityChicken extends EntityChicken {
 			}
 			rotationYaw = entity.rotationYaw;
 			if (entity.motionY > -0.5D) {
-				// è½ä¸‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚­ãƒ£ãƒ³ã‚»ãƒ«
+				// —‰ºƒ_ƒ[ƒWƒLƒƒƒ“ƒZƒ‹
 				entity.updateFallState(1, true);
 			}
 		}
 		
 		if (!worldObj.isRemote) {
-			// ç”£åµåˆ¤å®šã®æ¨ªå–ã‚Š
+			// Y—‘”»’è‚Ì‰¡æ‚è
 			if (!isChild() && timeUntilNextEgg <= 1) {
 				worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F,
 						(rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 				dropItem(Item.egg.itemID, 1);
-				// ãƒ©ã‚¤ãƒ•ãŒå¤šã„ã¨ç”£ã¿ãŒã„ã„
+				// ƒ‰ƒCƒt‚ª‘½‚¢‚ÆY‚İ‚ª‚¢‚¢
 				if (setNextLayEgg()) {
 					health--;
 				}
 			}
-			// ç¾½ãŒç”ŸãˆãŸ
+			// ‰H‚ª¶‚¦‚½
 			if (fFullFrontal && getGrowingAge() == 0) {
 				System.out.println("Growup feather.");
 				setFullFrontal(false);
@@ -341,7 +341,7 @@ public class EIT_EntityChicken extends EntityChicken {
 		super.onLivingUpdate();
 		
 		if (isRiding()) {
-			// ç¾½ã°ãŸãã‚­ãƒ£ãƒ³ã‚»ãƒ«
+			// ‰H‚Î‚½‚«ƒLƒƒƒ“ƒZƒ‹
 			field_70886_e = bk_wingRot;
 			destPos = bk_destPos;
 			field_70889_i = bk_field_755_h;
@@ -367,7 +367,7 @@ public class EIT_EntityChicken extends EntityChicken {
 			field_70886_e += field_70889_i * 2.0F;
 		}
 		if (fFullFrontal) {
-			// ç¾½ãŒç„¡ã‘ã‚Œã°å½“ç„¶é£›ã¹ãªã„
+			// ‰H‚ª–³‚¯‚ê‚Î“–‘R”ò‚×‚È‚¢
 			if (!onGround && motionY < 0.0D) {
 				motionY *= 1.67D;
 			}
@@ -376,7 +376,7 @@ public class EIT_EntityChicken extends EntityChicken {
 
 	@Override
 	protected void fall(float f) {
-		// è½ä¸‹ãƒ€ãƒ¡ãƒ¼ã‚¸
+		// —‰ºƒ_ƒ[ƒW
 		if (fFullFrontal) {
 			if (riddenByEntity != null) {
 				riddenByEntity.fall(f);
@@ -407,7 +407,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	}
 
 	public void showLoveOrHappyFX(boolean flag) {
-		// ã‚¢ã‚¤ã‚³ãƒ³è¡¨ç¤º
+		// ƒAƒCƒRƒ“•\¦
 		if (flag) {
 			// Love
 			for (int i = 0; i < 7; i++) {
@@ -428,7 +428,7 @@ public class EIT_EntityChicken extends EntityChicken {
 		}
 	}
 
-	// é£¼ã„æ…£ã‚‰ã—
+	// ”‚¢Šµ‚ç‚µ
 	public boolean isTamed() {
 		return getMyFlag(flag_isTamed);
 	}
@@ -438,22 +438,22 @@ public class EIT_EntityChicken extends EntityChicken {
 	}
 
 	public boolean isShitting() {
-		// åº§ã£ã¦ã„ã‚‹ã‹ï¼Ÿ
+		// À‚Á‚Ä‚¢‚é‚©H
 		return isIncubator() || isRiding();
 	}
 
 	public boolean isIncubator() {
-		// æ‰˜åµçŠ¶æ…‹ã‹ï¼Ÿ
+		// ‘ï—‘ó‘Ô‚©H
 		return getMyFlag(flag_isIncubate);
 	}
 
 	public ItemStack getIncubator() {
-		// åµã¯ï¼Ÿ
+		// —‘‚ÍH
 		return incubatoregg;
 	}
 
 	public boolean setIncubator(ItemStack itemstack) {
-		// æ‰˜åµ
+		// ‘ï—‘
 		if (itemstack != null && (itemstack.getItem() instanceof ItemEgg)) {
 			incubatoregg = itemstack;
 			setMyFlag(flag_isIncubate, true);
@@ -466,7 +466,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	}
 
 	public boolean canFrontal() {
-		// ç¾½ã‚’æ¯Ÿã‚Œã‚‹ã‹
+		// ‰H‚ğŸz‚ê‚é‚©
 		return mod_EIT_IKATORITame.isPlucked && !isChild() && !isFullFrontal();
 	}
 
@@ -516,20 +516,20 @@ public class EIT_EntityChicken extends EntityChicken {
 			return false;
 		}
 		if (isChild() || isFullFrontal()) {
-			// ãˆã•ã‚’é£Ÿã¹ã‚‹ã¨æˆé•·æ—©ã„
+			// ‚¦‚³‚ğH‚×‚é‚Æ¬’·‘‚¢
 			setGrowingAge((int) ((float) getGrowingAge() * 0.9F));
 		}
 		heal(1);
 		worldObj.playSoundAtEntity(this, "random.pop", 0.2F,
 				((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-		// ãƒ©ã‚¤ãƒ•ãŒå¤šã„ã¨ç”£ã¿ãŒã„ã„
+		// ƒ‰ƒCƒt‚ª‘½‚¢‚ÆY‚İ‚ª‚¢‚¢
 		setNextLayEgg();
 		attackTime = 5;
 		return true;
 	}
 
 	public boolean setNextLayEgg() {
-		// åµã‚’ç”£ã‚€é–“éš”
+		// —‘‚ğY‚ŞŠÔŠu
 		timeUntilNextEgg = rand.nextInt(6000) + 6000;
 		if (health > 4) {
 			timeUntilNextEgg = (16 * timeUntilNextEgg) / (5 * health - 4);

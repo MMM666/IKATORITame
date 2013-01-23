@@ -1,4 +1,4 @@
-ï»¿package net.minecraft.src;
+package net.minecraft.src;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ public class EIT_EntitySquid extends EntitySquid {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		// ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ ãƒ•ãƒ©ã‚°
+		// ƒŠƒAƒ‹ƒ^ƒCƒ€ƒtƒ‰ƒO
 
 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
 	}
 
 	@Override
 	public int getMaxHealth() {
-		// æœ€å¤§HP
+		// Å‘åHP
 		return 20;
 	}
 
@@ -59,7 +59,7 @@ public class EIT_EntitySquid extends EntitySquid {
 		}
 	}
 
-	// è¿½åŠ åˆ†
+	// ’Ç‰Á•ª
 	@Override
 	protected boolean isAIEnabled() {
 		return false;
@@ -115,7 +115,7 @@ public class EIT_EntitySquid extends EntitySquid {
 		}
 	}
 
-	// é£¼ã„ãªã‚‰ã—
+	// ”‚¢‚È‚ç‚µ
 	public boolean isTamed() {
 		return getMyFlag(4);
 	}
@@ -143,7 +143,7 @@ public class EIT_EntitySquid extends EntitySquid {
 	}
 
 	public boolean eatFish() {
-		// é­šã‚’é£Ÿã¹ã¦å›å¾©
+		// ‹›‚ğH‚×‚Ä‰ñ•œ
 		if (attackTime > 0 || health > getMaxHealth()) {
 			return false;
 		}
@@ -155,13 +155,13 @@ public class EIT_EntitySquid extends EntitySquid {
 	}
 
 	public boolean squidInteract(EntityPlayer entityplayer) {
-		// è§¦ã£ãŸæ™‚ã®åˆ¤å®š
+		// G‚Á‚½‚Ì”»’è
 		if (entityplayer != null) {
 			ItemStack itemstack = entityplayer.getCurrentEquippedItem();
 			if (!worldObj.isRemote) {
 				// Server
 				if (itemstack == null && isTamed()) {
-					// ç„¡æ‰‹
+					// –³è
 					// RIDE-OFF
 					if (entityplayer.ridingEntity == this) {
 						entityplayer.mountEntity(this);
@@ -179,7 +179,7 @@ public class EIT_EntitySquid extends EntitySquid {
 				}
 			}
 			if (itemstack != null && itemstack.stackSize > 0) {
-				// è£…å‚™å“
+				// ‘•”õ•i
 				if (itemstack.itemID == Item.fishRaw.itemID) {
 					if (eatFish()) {
 						if (!super.interact(entityplayer)) {
@@ -210,7 +210,7 @@ public class EIT_EntitySquid extends EntitySquid {
 				if (isTamed() && itemstack.itemID == Item.dyePowder.itemID
 						&& itemstack.getItemDamage() == 0) {
 					// RIDE-ON
-					// ã‚¤ã‚«ã«ä¹—ã‚‹
+					// ƒCƒJ‚Éæ‚é
 					if (!entityplayer.capabilities.isCreativeMode) {
 						if (--itemstack.stackSize <= 0) {
 							entityplayer.inventory.setInventorySlotContents(
@@ -229,7 +229,7 @@ public class EIT_EntitySquid extends EntitySquid {
 	public void squidOnLivingUpdate() {
 		super.onLivingUpdate();
 		if (isInWater()) {
-			// è¿½è¨˜ï¼šä½•ã‹ã«ä¹—ã£ã¦ã„ã‚‹æ™‚ã¯ç¸¦ç½®ã
+			// ’Ç‹LF‰½‚©‚Éæ‚Á‚Ä‚¢‚é‚Íc’u‚«
 			if (ridingEntity == null) {
 				// field_70861_d += (double)(-90F - field_70861_d) * 0.02D;
 			} else {
@@ -242,7 +242,7 @@ public class EIT_EntitySquid extends EntitySquid {
 
 	public void squidUpdateEntityActionState() {
 		Entity entity = null;
-		// é­šã®æ¢ç´¢
+		// ‹›‚Ì’Tõ
 		double d = -1D;
 		List list = worldObj.getEntitiesWithinAABB(
 				net.minecraft.src.EntityItem.class,
@@ -250,7 +250,7 @@ public class EIT_EntitySquid extends EntitySquid {
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				Entity entity1 = (Entity) list.get(i);
-				// TODO:ã‚¢ã‚¤ãƒ†ãƒ ã®æ°´æ²¡åˆ¤å®šãŒç„¡ããªã£ã¦ã‚‹ã®ã§ã“ã“ã§ä»£è¡Œ
+				// TODO:ƒAƒCƒeƒ€‚Ì…–v”»’è‚ª–³‚­‚È‚Á‚Ä‚é‚Ì‚Å‚±‚±‚Å‘ãs
 				boolean lflag = this.worldObj.handleMaterialAcceleration(
 						entity1.boundingBox, Material.water, entity1);
 				if (!entity1.isDead
@@ -269,7 +269,7 @@ public class EIT_EntitySquid extends EntitySquid {
 			if (entity != null && d < 1.0D
 					&& ((EntityItem) entity).delayBeforeCanPickup <= 0
 					&& eatFish()) {
-				// ã‚¢ã‚¤ãƒ†ãƒ ã«æ¥è§¦
+				// ƒAƒCƒeƒ€‚ÉÚG
 				ItemStack lstack = ((EntityItem) entity).getEntityItem();
 				if (--lstack.stackSize <= 0) {
 					entity.setDead();
@@ -287,7 +287,7 @@ public class EIT_EntitySquid extends EntitySquid {
 				if ((entity2 instanceof EntityPlayer) && entity2.inWater == inWater) {
 					ItemStack itemstack = ((EntityPlayer) entity2).getCurrentEquippedItem();
 					if (itemstack != null && itemstack.itemID == Item.fishRaw.itemID) {
-						// æ°´ã®ä¸­ã®é­šã‚’æŒã£ãŸãƒ—ãƒ¬ãƒ¼ãƒ¤ãƒ¼ã«å‘ã‹ã†
+						// …‚Ì’†‚Ì‹›‚ğ‚Á‚½ƒvƒŒ[ƒ„[‚ÉŒü‚©‚¤
 						double d3 = getDistanceSqToEntity(entity2);
 						if (d1 == -1D || d3 < d1) {
 							d1 = d3;
@@ -306,7 +306,7 @@ public class EIT_EntitySquid extends EntitySquid {
 					float randomMotionVecY;
 					float randomMotionVecZ;
 					
-					// é­šã«å‘ã‹ã£ã¦ã”ãƒ¼
+					// ‹›‚ÉŒü‚©‚Á‚Ä‚²[
 					double d4 = entity.posX - posX;
 					double d5 = entity.posY - posY
 							- (double) entity.getEyeHeight();
@@ -321,7 +321,7 @@ public class EIT_EntitySquid extends EntitySquid {
 						randomMotionVecY = (float) (d5 / d7) * 0.2F;
 						randomMotionVecZ = (float) (d6 / d7) * 0.2F;
 					} else {
-						// éšœå®³ç‰©ãŒæœ‰ã‚‹æ™‚ã¯ä¸Šã‹ä¸‹ã«å›é¿
+						// áŠQ•¨‚ª—L‚é‚Íã‚©‰º‚É‰ñ”ğ
 						randomMotionVecX = 0.0F;
 						randomMotionVecY = d5 <= 0.0D ? -0.2F : 0.2F;
 						randomMotionVecZ = 0.0F;
