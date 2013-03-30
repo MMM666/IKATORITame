@@ -61,7 +61,7 @@ public class EIT_EntityAIEatFoodChickenTame extends EntityAIBase {
 					if (--lstack.stackSize <= 0) {
 						targetEntity.setDead();
 					} else {
-						targetEntity.func_92058_a(lstack);
+						targetEntity.setEntityItemStack(lstack);
 					}
 				} else {
 					targetEntity = null;

@@ -18,11 +18,12 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	public static boolean isChickTexture = true;
 	@MLProp(info="Enable plucked")
 	public static boolean isPlucked = true;
-	
-	
+
+
+
 	@Override
 	public String getVersion() {
-		return "1.4.7-1";
+		return "1.5.1-1";
 	}
 
 	@Override
@@ -118,8 +119,8 @@ public class mod_EIT_IKATORITame extends BaseMod {
 				
 				// —‘‚Ì’u‚«Š·‚¦
 				Item.itemsList[256 + 88] = null;
-				Item.egg = (new EIT_ItemEgg(88)).setIconCoord(12, 0).setItemName("egg");
-				ModLoader.addDispenserBehavior(Item.egg, new EIT_BehaviorEggDispense(null));
+				Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
+				ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
 			}
 		}
 	}

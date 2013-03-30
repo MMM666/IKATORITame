@@ -274,7 +274,7 @@ public class EIT_EntitySquid extends EntitySquid {
 				if (--lstack.stackSize <= 0) {
 					entity.setDead();
 				} else {
-					((EntityItem) entity).func_92058_a(lstack);
+					((EntityItem) entity).setEntityItemStack(lstack);
 				}
 				entity = null;
 			}
