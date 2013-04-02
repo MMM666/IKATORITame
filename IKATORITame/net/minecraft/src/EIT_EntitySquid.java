@@ -174,7 +174,12 @@ public class EIT_EntitySquid extends EntitySquid {
 							entity1 = entity1.riddenByEntity;
 						}
 					}
-					mountEntity(entity1);
+					// Ç»ÇÒÇ©ç~ÇËÇÁÇÍÇ»Ç¢ÇÃÇ≈
+					if (ridingEntity == entityplayer) {
+						mountEntity(null);
+					} else {
+						mountEntity(entity1);
+					}
 					return true;
 				}
 			}

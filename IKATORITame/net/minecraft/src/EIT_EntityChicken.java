@@ -202,6 +202,7 @@ public class EIT_EntityChicken extends EntityChicken {
 				// RIDE-OFF
 				if (entityplayer.ridingEntity == this) {
 					entityplayer.mountEntity(this);
+//					entityplayer.mountEntity(null);
 					return true;
 				}
 				if (itemstack == null && isTamed()) {
@@ -217,7 +218,12 @@ public class EIT_EntityChicken extends EntityChicken {
 						entityDropItem(getIncubator(), 0.0F);
 						setIncubator(null);
 					}
-					mountEntity(entity1);
+					// Ç»ÇÒÇ©ç~ÇËÇÁÇÍÇ»Ç¢ÇÃÇ≈
+					if (ridingEntity == entityplayer) {
+						mountEntity(null);
+					} else {
+						mountEntity(entity1);
+					}
 					return true;
 				}
 				
@@ -560,5 +566,24 @@ public class EIT_EntityChicken extends EntityChicken {
 		super.onUpdate();
 		updateHPMax();
 	}
+
+	/*
+	@Override
+	public void mountEntity(Entity par1Entity) {
+		// è]óàí ÇËÇæÇ∆â∫ÇËÇÁÇÍÇ»Ç¢ÇÃÇ≈
+		if (this.ridingEntity == par1Entity) {
+			this.unmountEntity(par1Entity);
+			
+			if (this.ridingEntity != null)
+			{
+				this.ridingEntity.riddenByEntity = null;
+			}
+			
+			this.ridingEntity = null;
+		} else {
+			super.mountEntity(par1Entity);
+		}
+	}
+*/
 
 }

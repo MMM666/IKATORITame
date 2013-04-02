@@ -127,10 +127,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 
 	@Override
 	public void addRenderer(Map map) {
-		if (isReplaceChicken) {
-			// Œ{‚ÌƒŒƒ“ƒ_[‚ğ’Ç‰ÁAŒ³‚Ì‚Í•Ê‚ÉÁ‚µ‚Ä‚È‚¢
-			map.put(EIT_EntityChicken.class, new EIT_RenderChickenTame(new ModelChicken(), 0.3F));
-		}
+		EIT_Client.addRenderer(map);
 	}
 
 }
