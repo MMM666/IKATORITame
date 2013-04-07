@@ -61,14 +61,14 @@ public class mod_EIT_IKATORITame extends BaseMod {
 				lmap.put(pDestClass, ls);
 			}
 			// IDtoClassMapping
-			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 0);
+			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 2);
 			for (Entry<Integer, Class> le : ((Map<Integer, Class>)lmap).entrySet()) {
 				if (le.getValue() == pSrcClass) {
 					le.setValue(pDestClass);
 				}
 			}
 			// classToIDMapping
-			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 1);
+			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 3);
 			if (lmap.containsKey(pSrcClass)) {
 				lint = (Integer)lmap.get(pSrcClass);
 				lmap.remove(pSrcClass);
@@ -76,7 +76,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			}
 			Debug("Replace %s -> %s", pSrcClass.getSimpleName(), pDestClass.getSimpleName());
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -96,30 +96,6 @@ public class mod_EIT_IKATORITame extends BaseMod {
 
 	@Override
 	public void load() {
-		// 置換え用メソッドの獲得
-		Method method2 = null;
-		try {
-			try {
-				try {
-					method2 = (EntityList.class).getDeclaredMethod("a", new Class[] {
-							java.lang.Class.class, java.lang.String.class,
-							Integer.TYPE, Integer.TYPE, Integer.TYPE
-					});
-				} catch(NoSuchMethodException nosuchmethodexception2) {
-					method2 = (EntityList.class).getDeclaredMethod("addMapping", new Class[] {
-							java.lang.Class.class, java.lang.String.class,
-							Integer.TYPE, Integer.TYPE, Integer.TYPE
-					});
-				}
-			} catch(NoSuchMethodException nosuchmethodexception2) {
-				method2 = (EntityList.class).getDeclaredMethods()[1];
-			}
-			method2.setAccessible(true);
-		} catch(Exception e) {
-			Debug("can't find Method.");
-			return;
-		}
-		
 		if (isReplaceSquid) {
 			// EntitySquidのメソッドをチェックしてSquidの置き換えが必要かどうか判定
 			Method method1 = null;
@@ -130,29 +106,10 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			} catch (Exception e) {
 			}
 			
-			if (method1 == null) {
-				try {
-					// イカの置き換え
-//					method2.invoke(null, new Object[] {EIT_EntitySquid.class, "Squid", 94, 2243405, 7375001});
-					replaceEntityList(EntitySquid.class, EIT_EntitySquid.class);
-					// バイオームの発生処理をのっとる
-					for (int i = 0; i < BiomeGenBase.biomeList.length; i++) {
-						if (BiomeGenBase.biomeList[i] == null) continue;
-						List<SpawnListEntry> mobs = BiomeGenBase.biomeList[i].spawnableWaterCreatureList;
-						if (mobs == null) continue;
-						for (int j = 0; j < mobs.size(); j++) {
-							if (mobs.get(j).entityClass == EntitySquid.class) {
-								mobs.get(j).entityClass = EIT_EntitySquid.class;
-							}
-						}
-					}
-					Debug("Replace IKA.");
-				}
-				catch (Exception e) {
-					Debug("Failed IKA.");
-					e.printStackTrace();
-				}
-			}
+			// イカの置き換え
+			replaceEntityList(EntitySquid.class, EIT_EntitySquid.class);
+			replaceBaiomeSpawn(EntitySquid.class, EIT_EntitySquid.class);
+			Debug("Replace IKA.");
 		}
 
 		if (isReplaceChicken) {
@@ -166,37 +123,17 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			catch (Exception e) {
 			}
 			
-			if (method1 == null) {
-				try {
-					// トリの置き換え
-//					method2.invoke(null, new Object[] {EIT_EntityChicken.class, "Chicken", 93, 10592673, 16711680});
-					replaceEntityList(EntityChicken.class, EIT_EntityChicken.class);
-					
-					// バイオームの発生処理をのっとる
-					for (int i = 0; i < BiomeGenBase.biomeList.length; i++) {
-						if (BiomeGenBase.biomeList[i] == null) continue;
-						List<SpawnListEntry> mobs = BiomeGenBase.biomeList[i].spawnableCreatureList;
-						if (mobs == null) continue;
-						for (int j = 0; j < mobs.size(); j++) {
-							if (mobs.get(j).entityClass == EntityChicken.class) {
-								mobs.get(j).entityClass = EIT_EntityChicken.class;
-							}
-						}
-					}
-					Debug("Replace Chicken.");
-				}
-				catch (Exception e) {
-					Debug("Failed Chicken.");
-					e.printStackTrace();
-				}
-				
-				// 卵の置き換え
-				Item.itemsList[256 + 88] = null;
-				Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
-				ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
-				ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
-				ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
-			}
+			// トリの置き換え
+			replaceEntityList(EntityChicken.class, EIT_EntityChicken.class);
+			replaceBaiomeSpawn(EntityChicken.class, EIT_EntityChicken.class);
+			Debug("Replace Chicken.");
+			// 卵の置き換え
+			Item.itemsList[256 + 88] = null;
+			Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
+			ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
+			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
+			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
+			Debug("Replace Egg.");
 		}
 	}
 
