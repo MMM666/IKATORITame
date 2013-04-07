@@ -316,7 +316,7 @@ public class EIT_EntityChicken extends EntityChicken {
 		if (!worldObj.isRemote) {
 			// ŽY—‘”»’è‚Ì‰¡Žæ‚è
 			if (!isChild() && timeUntilNextEgg <= 1) {
-				worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F,
+				playSound("mob.chickenplop", 1.0F,
 						(rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 				dropItem(Item.egg.itemID, 1);
 				// ƒ‰ƒCƒt‚ª‘½‚¢‚ÆŽY‚Ý‚ª‚¢‚¢
@@ -390,11 +390,9 @@ public class EIT_EntityChicken extends EntityChicken {
 			int i = (int) Math.ceil(f - 3F);
 			if (i > 0) {
 				if (i > 4) {
-					worldObj.playSoundAtEntity(this, "damage.fallbig", 1.0F,
-							1.0F);
+					playSound("damage.fallbig", 1.0F, 1.0F);
 				} else {
-					worldObj.playSoundAtEntity(this, "damage.fallsmall", 1.0F,
-							1.0F);
+					playSound("damage.fallsmall", 1.0F, 1.0F);
 				}
 				attackEntityFrom(DamageSource.fall, i);
 				int j = worldObj.getBlockId(
@@ -404,7 +402,7 @@ public class EIT_EntityChicken extends EntityChicken {
 						MathHelper.floor_double(posZ));
 				if (j > 0) {
 					StepSound stepsound = Block.blocksList[j].stepSound;
-					worldObj.playSoundAtEntity(this, stepsound.getStepSound(),
+					playSound(stepsound.getStepSound(),
 							stepsound.getVolume() * 0.5F,
 							stepsound.getPitch() * 0.75F);
 				}
@@ -526,7 +524,7 @@ public class EIT_EntityChicken extends EntityChicken {
 			setGrowingAge((int) ((float) getGrowingAge() * 0.9F));
 		}
 		heal(1);
-		worldObj.playSoundAtEntity(this, "random.pop", 0.2F,
+		playSound("random.pop", 0.2F, 
 				((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		// ƒ‰ƒCƒt‚ª‘½‚¢‚ÆŽY‚Ý‚ª‚¢‚¢
 		setNextLayEgg();

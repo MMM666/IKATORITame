@@ -8,6 +8,7 @@ public class EIT_Client {
 		if (mod_EIT_IKATORITame.isReplaceChicken) {
 			// Œ{‚ÌƒŒƒ“ƒ_[‚ğ’Ç‰ÁAŒ³‚Ì‚Í•Ê‚ÉÁ‚µ‚Ä‚È‚¢
 			map.put(EIT_EntityChicken.class, new EIT_RenderChickenTame(new ModelChicken(), 0.3F));
+			map.put(EIT_EntityEgg.class, new RenderSnowball(Item.egg));
 		}
 	}
 

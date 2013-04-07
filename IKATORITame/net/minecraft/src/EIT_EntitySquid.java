@@ -148,7 +148,7 @@ public class EIT_EntitySquid extends EntitySquid {
 			return false;
 		}
 		heal(((ItemFood) Item.fishRaw).getHealAmount());
-		worldObj.playSoundAtEntity(this, "random.pop", 0.2F,
+		playSound("random.pop", 0.2F,
 				((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		attackTime = 15;
 		return true;
