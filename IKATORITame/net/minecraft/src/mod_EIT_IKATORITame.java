@@ -24,6 +24,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	public static boolean isDebugMessage = true;
 
 
+
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
 		if (isDebugMessage) {
@@ -32,16 +33,79 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	}
 
 	@Override
-	public String getVersion() {
-		return "1.5.1-2";
-	}
-
-	@Override
 	public String getName() {
 		return "IKATORITame";
 	}
 
+	@Override
+	public String getVersion() {
+		return "1.5.1-3";
+	}
+
+	@Override
+	public void load() {
+		// MMMLibのRevisionチェック
+		MMM_Helper.checkRevision("1");
+		
+		if (isReplaceSquid) {
+			// イカの置き換え
+			replaceEntityList(EntitySquid.class, EIT_EntitySquid.class);
+			Debug("Replace IKA.");
+		}
+		
+		if (isReplaceChicken) {
+			// トリの置き換え
+			replaceEntityList(EntityChicken.class, EIT_EntityChicken.class);
+			Debug("Replace Chicken.");
+			
+			// 卵の置き換え
+			Item.itemsList[256 + 88] = null;
+			Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
+			ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
+			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
+			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
+			Debug("Replace Egg.");
+		}
+	}
+
+	@Override
+	public void modsLoaded() {
+		// バイオームに設定されたスポーン情報を置き換え。
+		if (isReplaceSquid) {
+			replaceBaiomeSpawn(EntitySquid.class, EIT_EntitySquid.class);
+		}
+		if (isReplaceChicken) {
+			replaceBaiomeSpawn(EntityChicken.class, EIT_EntityChicken.class);
+		}
+	}
+
+	@Override
+	public void addRenderer(Map map) {
+		EIT_Client.addRenderer(map);
+	}
+
+	// Forge
+	@Override
+	public Entity spawnEntity(int entityId, World world, double scaledX, double scaledY, double scaledZ) {
+		// Modloader下では独自に生成するので要らない。
+		// というかModLoader環境ではIDが3000以上になるのでここは呼ばれない。
+		if (!MMM_Helper.isForge) return null;
+		EIT_EntityEgg lentity = new EIT_EntityEgg(world, scaledX, scaledY, scaledZ);
+		lentity.entityId = entityId;
+//		lentity.setPosition(scaledX, scaledY, scaledZ);
+		return lentity;
+	}
+
+	//Modloader
+	@Override
+	public Packet23VehicleSpawn getSpawnPacket(Entity var1, int var2) {
+		// Forge環境下では呼ばれない
+		EntityLiving lentity = ((EIT_EntityEgg)var1).getThrower();
+		return new EIT_PacketEggSpawn(var1, lentity == null ? 0 : lentity.entityId);
+	}
+
 	public void replaceEntityList(Class pSrcClass, Class pDestClass) {
+		// EntityList登録情報を置き換え
 		try {
 			// stringToClassMapping
 			Map lmap;
@@ -79,87 +143,32 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			e.printStackTrace();
 		}
 	}
-	
+
+	protected void replaceCreatureList(Class pSrcClass, Class pDestClass, List<SpawnListEntry> pMobs) {
+		if (pMobs == null) return;
+		for (int j = 0; j < pMobs.size(); j++) {
+			if (pMobs.get(j).entityClass == pSrcClass) {
+				pMobs.get(j).entityClass = pDestClass;
+				Debug("ReplaceCreatureList: %s -> %s", pSrcClass.getSimpleName(), pDestClass.getSimpleName());
+			}
+		}
+	}
+
 	public void replaceBaiomeSpawn(Class pSrcClass, Class pDestClass) {
 		// バイオームの発生処理をのっとる
 		for (int i = 0; i < BiomeGenBase.biomeList.length; i++) {
 			if (BiomeGenBase.biomeList[i] == null) continue;
-			List<SpawnListEntry> mobs = BiomeGenBase.biomeList[i].spawnableWaterCreatureList;
-			if (mobs == null) continue;
-			for (int j = 0; j < mobs.size(); j++) {
-				if (mobs.get(j).entityClass == pSrcClass) {
-					mobs.get(j).entityClass = pDestClass;
-				}
-			}
+			List<SpawnListEntry> mobs;
+			Debug("ReplaceBaiomeSpawn:%s", BiomeGenBase.biomeList[i].biomeName);
+			Debug("Creature.");
+			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableCreatureList);
+			Debug("WaterCreature.");
+			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableWaterCreatureList);
+			Debug("CaveCreature.");
+			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableCaveCreatureList);
+			Debug("Monster.");
+			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableMonsterList);
 		}
-	}
-
-	@Override
-	public void load() {
-		if (isReplaceSquid) {
-			// EntitySquidのメソッドをチェックしてSquidの置き換えが必要かどうか判定
-			Method method1 = null;
-			try {
-				// Jarにいれてるのかい？
-				method1 = EntitySquid.class.getDeclaredMethod("isTamed", new Class[] {});
-				Debug("is IKA Tame.");
-			} catch (Exception e) {
-			}
-			
-			// イカの置き換え
-			replaceEntityList(EntitySquid.class, EIT_EntitySquid.class);
-			replaceBaiomeSpawn(EntitySquid.class, EIT_EntitySquid.class);
-			Debug("Replace IKA.");
-		}
-
-		if (isReplaceChicken) {
-			// EntityCheckenのメソッドをチェックしてCheckenの置き換えが必要かどうか判定
-			Method method1 = null;
-			try {
-				// Jarにいれてうのかい？
-				method1 = EntityChicken.class.getDeclaredMethod("isTamed", new Class[] {});
-				System.out.println("is TORI Tame.");
-			}
-			catch (Exception e) {
-			}
-			
-			// トリの置き換え
-			replaceEntityList(EntityChicken.class, EIT_EntityChicken.class);
-			replaceBaiomeSpawn(EntityChicken.class, EIT_EntityChicken.class);
-			Debug("Replace Chicken.");
-			// 卵の置き換え
-			Item.itemsList[256 + 88] = null;
-			Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
-			ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
-			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
-			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
-			Debug("Replace Egg.");
-		}
-	}
-
-	@Override
-	public void addRenderer(Map map) {
-		EIT_Client.addRenderer(map);
-	}
-
-	// Forge
-	@Override
-	public Entity spawnEntity(int entityId, World world, double scaledX, double scaledY, double scaledZ) {
-		// Modloader下では独自に生成するので要らない。
-		// というかModLoader環境ではIDが3000以上になるのでここは呼ばれない。
-		if (!MMM_Helper.isForge) return null;
-		EIT_EntityEgg lentity = new EIT_EntityEgg(world, scaledX, scaledY, scaledZ);
-		lentity.entityId = entityId;
-//		lentity.setPosition(scaledX, scaledY, scaledZ);
-		return lentity;
-	}
-
-	//Modloader
-	@Override
-	public Packet23VehicleSpawn getSpawnPacket(Entity var1, int var2) {
-		// Forge環境下では呼ばれない
-		EntityLiving lentity = ((EIT_EntityEgg)var1).getThrower();
-		return new EIT_PacketEggSpawn(var1, lentity == null ? 0 : lentity.entityId);
 	}
 
 }

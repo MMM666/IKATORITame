@@ -487,6 +487,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	}
 
 	public boolean updateHPMax() {
+		if (worldObj == null) return false;
 		if (worldObj.isRemote) {
 			return isHPMax();
 		}
@@ -502,6 +503,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	}
 
 	public void setMyFlag(int pindex, boolean pflag) {
+		if (worldObj == null) return;
 		if (worldObj.isRemote)
 			return;
 		byte lval = this.dataWatcher.getWatchableObjectByte(16);
