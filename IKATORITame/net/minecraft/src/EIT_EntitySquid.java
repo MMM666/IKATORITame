@@ -239,7 +239,7 @@ public class EIT_EntitySquid extends EntitySquid {
 				// field_70861_d += (double)(-90F - field_70861_d) * 0.02D;
 			} else {
 				rotationYaw = ridingEntity.rotationYaw;
-				field_70861_d = 0.0F;
+				tentacleAngle = 0.0F;
 				onGround = ridingEntity.onGround;
 			}
 		}
