@@ -39,7 +39,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.1-3";
+		return "1.5.2-1";
 	}
 
 	@Override
@@ -49,13 +49,13 @@ public class mod_EIT_IKATORITame extends BaseMod {
 		
 		if (isReplaceSquid) {
 			// イカの置き換え
-			replaceEntityList(EntitySquid.class, EIT_EntitySquid.class);
+			MMM_Helper.replaceEntityList(EntitySquid.class, EIT_EntitySquid.class);
 			Debug("Replace IKA.");
 		}
 		
 		if (isReplaceChicken) {
 			// トリの置き換え
-			replaceEntityList(EntityChicken.class, EIT_EntityChicken.class);
+			MMM_Helper.replaceEntityList(EntityChicken.class, EIT_EntityChicken.class);
 			Debug("Replace Chicken.");
 			
 			// 卵の置き換え
@@ -65,17 +65,6 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
 			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
 			Debug("Replace Egg.");
-		}
-	}
-
-	@Override
-	public void modsLoaded() {
-		// バイオームに設定されたスポーン情報を置き換え。
-		if (isReplaceSquid) {
-			replaceBaiomeSpawn(EntitySquid.class, EIT_EntitySquid.class);
-		}
-		if (isReplaceChicken) {
-			replaceBaiomeSpawn(EntityChicken.class, EIT_EntityChicken.class);
 		}
 	}
 
@@ -102,73 +91,6 @@ public class mod_EIT_IKATORITame extends BaseMod {
 		// Forge環境下では呼ばれない
 		EntityLiving lentity = ((EIT_EntityEgg)var1).getThrower();
 		return new EIT_PacketEggSpawn(var1, lentity == null ? 0 : lentity.entityId);
-	}
-
-	public void replaceEntityList(Class pSrcClass, Class pDestClass) {
-		// EntityList登録情報を置き換え
-		try {
-			// stringToClassMapping
-			Map lmap;
-			int lint;
-			String ls;
-			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 0);
-			for (Entry<String, Class> le : ((Map<String, Class>)lmap).entrySet()) {
-				if (le.getValue() == pSrcClass) {
-					le.setValue(pDestClass);
-				}
-			}
-			// classToStringMapping
-			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 1);
-			if (lmap.containsKey(pSrcClass)) {
-				ls = (String)lmap.get(pSrcClass);
-				lmap.remove(pSrcClass);
-				lmap.put(pDestClass, ls);
-			}
-			// IDtoClassMapping
-			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 2);
-			for (Entry<Integer, Class> le : ((Map<Integer, Class>)lmap).entrySet()) {
-				if (le.getValue() == pSrcClass) {
-					le.setValue(pDestClass);
-				}
-			}
-			// classToIDMapping
-			lmap = (Map)ModLoader.getPrivateValue(EntityList.class, null, 3);
-			if (lmap.containsKey(pSrcClass)) {
-				lint = (Integer)lmap.get(pSrcClass);
-				lmap.remove(pSrcClass);
-				lmap.put(pDestClass, lint);
-			}
-			Debug("Replace %s -> %s", pSrcClass.getSimpleName(), pDestClass.getSimpleName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected void replaceCreatureList(Class pSrcClass, Class pDestClass, List<SpawnListEntry> pMobs) {
-		if (pMobs == null) return;
-		for (int j = 0; j < pMobs.size(); j++) {
-			if (pMobs.get(j).entityClass == pSrcClass) {
-				pMobs.get(j).entityClass = pDestClass;
-				Debug("ReplaceCreatureList: %s -> %s", pSrcClass.getSimpleName(), pDestClass.getSimpleName());
-			}
-		}
-	}
-
-	public void replaceBaiomeSpawn(Class pSrcClass, Class pDestClass) {
-		// バイオームの発生処理をのっとる
-		for (int i = 0; i < BiomeGenBase.biomeList.length; i++) {
-			if (BiomeGenBase.biomeList[i] == null) continue;
-			List<SpawnListEntry> mobs;
-			Debug("ReplaceBaiomeSpawn:%s", BiomeGenBase.biomeList[i].biomeName);
-			Debug("Creature.");
-			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableCreatureList);
-			Debug("WaterCreature.");
-			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableWaterCreatureList);
-			Debug("CaveCreature.");
-			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableCaveCreatureList);
-			Debug("Monster.");
-			replaceCreatureList(pSrcClass, pDestClass, BiomeGenBase.biomeList[i].spawnableMonsterList);
-		}
 	}
 
 }
