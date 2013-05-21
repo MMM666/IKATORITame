@@ -22,6 +22,8 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	public static boolean isPlucked = true;
 	@MLProp
 	public static boolean isDebugMessage = true;
+	
+	public static Class classEggEntity = null;
 
 
 
@@ -39,13 +41,13 @@ public class mod_EIT_IKATORITame extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.2-1";
+		return "1.5.2-2";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("1");
+		MMM_Helper.checkRevision("2");
 		
 		if (isReplaceSquid) {
 			// イカの置き換え
@@ -62,8 +64,10 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			Item.itemsList[256 + 88] = null;
 			Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
 			ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
-			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
-			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
+			classEggEntity = MMM_Helper.getForgeClass(this, "EIT_EntityEgg");
+			MMM_Helper.registerEntity(classEggEntity, "egg", 0, this, 64, 10, true);
+//			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
+//			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
 			Debug("Replace Egg.");
 		}
 	}
@@ -72,7 +76,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 	public void addRenderer(Map map) {
 		EIT_Client.addRenderer(map);
 	}
-
+/*
 	// Forge
 	@Override
 	public Entity spawnEntity(int entityId, World world, double scaledX, double scaledY, double scaledZ) {
@@ -84,7 +88,7 @@ public class mod_EIT_IKATORITame extends BaseMod {
 //		lentity.setPosition(scaledX, scaledY, scaledZ);
 		return lentity;
 	}
-
+*/
 	//Modloader
 	@Override
 	public Packet23VehicleSpawn getSpawnPacket(Entity var1, int var2) {
