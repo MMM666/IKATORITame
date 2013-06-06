@@ -286,7 +286,7 @@ public class EIT_EntitySquid extends EntitySquid {
 		}
 		if (entity == null && isTamed()) {
 			double d1 = -1D;
-			List list1 = worldObj.getLoadedEntityList();
+			List list1 = worldObj.loadedEntityList;
 			for (int j = 0; j < list1.size(); j++) {
 				Entity entity2 = (Entity) list1.get(j);
 				if ((entity2 instanceof EntityPlayer) && entity2.inWater == inWater) {
