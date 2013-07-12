@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 import java.util.List;
 
-public class EIT_EntitySquid extends EntitySquid {
+public class EIT_EntitySquid extends EntitySquid implements EntityOwnable {
 
 	public EIT_EntitySquid(World world) {
 		super(world);
 		// System.out.println("tamedSquid.");
-		health = 10;
+		setEntityHealth(10F);
 	}
 
 	@Override
@@ -16,24 +16,31 @@ public class EIT_EntitySquid extends EntitySquid {
 		// リアルタイムフラグ
 
 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
+		// ownerName
+		this.dataWatcher.addObject(17, "");
 	}
 
-	@Override
-	public int getMaxHealth() {
+	protected void func_110147_ax() {
+		super.func_110147_ax();
 		// 最大HP
-		return 20;
+		this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(20.0D);
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
 		super.writeEntityToNBT(nbttagcompound);
 		nbttagcompound.setBoolean("Tamed", isTamed());
+		nbttagcompound.setString("Owner", getOwnerName());
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
 		super.readEntityFromNBT(nbttagcompound);
-		setTamed(nbttagcompound.getBoolean("Tamed"));
+		setOwner(nbttagcompound.getString("Owner"));
+		if (getOwnerName().isEmpty() && nbttagcompound.getBoolean("Tamed")) {
+			// 古いの対策
+			setOwner("notch");
+		}
 	}
 
 	@Override
@@ -43,10 +50,19 @@ public class EIT_EntitySquid extends EntitySquid {
 
 	@Override
 	public void onLivingUpdate() {
+		super.onLivingUpdate();
 		if (!worldObj.isRemote) {
-			squidOnLivingUpdate();
+			if (isInWater()) {
+				// 追記：何かに乗っている時は縦置き
+				if (ridingEntity == null) {
+					// field_70861_d += (double)(-90F - field_70861_d) * 0.02D;
+				} else {
+					rotationYaw = ridingEntity.rotationYaw;
+					tentacleAngle = 0.0F;
+					onGround = ridingEntity.onGround;
+				}
+			}
 		} else {
-			super.onLivingUpdate();
 		}
 	}
 
@@ -117,12 +133,23 @@ public class EIT_EntitySquid extends EntitySquid {
 
 	// 飼いならし
 	public boolean isTamed() {
-		return getMyFlag(4);
+		return !getOwnerName().isEmpty();
 	}
 
-	public void setTamed(boolean flag) {
-		setMyFlag(4, flag);
+	@Override
+	public String getOwnerName() {
+		return dataWatcher.getWatchableObjectString(17);
 	}
+
+	public void setOwner(String par1Str) {
+		this.dataWatcher.updateObject(17, par1Str);
+	}
+
+	@Override
+	public Entity getOwner() {
+		return this.worldObj.getPlayerEntityByName(this.getOwnerName());
+	}
+
 
 	public boolean getMyFlag(int pindex) {
 		return (this.dataWatcher.getWatchableObjectByte(16) & pindex) != 0;
@@ -144,12 +171,11 @@ public class EIT_EntitySquid extends EntitySquid {
 
 	public boolean eatFish() {
 		// 魚を食べて回復
-		if (attackTime > 0 || health > getMaxHealth()) {
+		if (attackTime > 0 || func_110143_aJ() > func_110138_aP()) {
 			return false;
 		}
 		heal(((ItemFood) Item.fishRaw).getHealAmount());
-		playSound("random.pop", 0.2F,
-				((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+		playSound("random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 		attackTime = 15;
 		return true;
 	}
@@ -200,9 +226,10 @@ public class EIT_EntitySquid extends EntitySquid {
 						if (isTamed()) {
 							showLoveOrHappyFX(false);
 						} else {
-							setTamed(true);
 							showLoveOrHappyFX(true);
 						}
+						// 尻軽
+						setOwner(entityplayer.username);
 					} else {
 						if (!worldObj.isRemote) {
 							this.entityDropItem(new ItemStack(Item.dyePowder,
@@ -229,20 +256,6 @@ public class EIT_EntitySquid extends EntitySquid {
 			}
 		}
 		return super.interact(entityplayer);
-	}
-
-	public void squidOnLivingUpdate() {
-		super.onLivingUpdate();
-		if (isInWater()) {
-			// 追記：何かに乗っている時は縦置き
-			if (ridingEntity == null) {
-				// field_70861_d += (double)(-90F - field_70861_d) * 0.02D;
-			} else {
-				rotationYaw = ridingEntity.rotationYaw;
-				tentacleAngle = 0.0F;
-				onGround = ridingEntity.onGround;
-			}
-		}
 	}
 
 	public void squidUpdateEntityActionState() {

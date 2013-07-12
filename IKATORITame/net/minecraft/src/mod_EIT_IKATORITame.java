@@ -1,12 +1,6 @@
 package net.minecraft.src;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import net.minecraft.server.MinecraftServer;
 
 public class mod_EIT_IKATORITame extends BaseMod {
 
@@ -41,13 +35,13 @@ public class mod_EIT_IKATORITame extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.5.2-3";
+		return "1.6.2-1";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("4");
+		MMM_Helper.checkRevision("1");
 		
 		if (isReplaceSquid) {
 			// イカの置き換え
@@ -62,38 +56,29 @@ public class mod_EIT_IKATORITame extends BaseMod {
 			
 			// 卵の置き換え
 			Item.itemsList[256 + 88] = null;
-			Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg");
+			Item.egg = (new EIT_ItemEgg(88)).setUnlocalizedName("egg").func_111206_d("egg");
 			ModLoader.addDispenserBehavior(Item.egg, new EIT_DispenserBehaviorEgg());
 			classEggEntity = MMM_Helper.getForgeClass(this, "EIT_EntityEgg");
 			MMM_Helper.registerEntity(classEggEntity, "egg", 0, this, 64, 10, true);
-//			ModLoader.registerEntityID(EIT_EntityEgg.class, "egg", MMM_Helper.getNextEntityID(false));
-//			ModLoader.addEntityTracker(this, EIT_EntityEgg.class, MMM_Helper.getNextEntityID(false), 64, 10, true);
 			Debug("Replace Egg.");
 		}
 	}
 
 	@Override
 	public void addRenderer(Map map) {
-		EIT_Client.addRenderer(map);
+//		EIT_Client.addRenderer(map);
+		if (mod_EIT_IKATORITame.isReplaceChicken) {
+			// 鶏のレンダーを追加、元のは別に消してない
+			map.put(EIT_EntityChicken.class, new EIT_RenderChickenTame());
+			map.put(EIT_EntityEgg.class, new RenderSnowball(Item.egg));
+		}
 	}
-/*
-	// Forge
-	@Override
-	public Entity spawnEntity(int entityId, World world, double scaledX, double scaledY, double scaledZ) {
-		// Modloader下では独自に生成するので要らない。
-		// というかModLoader環境ではIDが3000以上になるのでここは呼ばれない。
-		if (!MMM_Helper.isForge) return null;
-		EIT_EntityEgg lentity = new EIT_EntityEgg(world, scaledX, scaledY, scaledZ);
-		lentity.entityId = entityId;
-//		lentity.setPosition(scaledX, scaledY, scaledZ);
-		return lentity;
-	}
-*/
+
 	//Modloader
 	@Override
 	public Packet23VehicleSpawn getSpawnPacket(Entity var1, int var2) {
 		// Forge環境下では呼ばれない
-		EntityLiving lentity = ((EIT_EntityEgg)var1).getThrower();
+		EntityLivingBase lentity = ((EIT_EntityEgg)var1).getThrower();
 		return new EIT_PacketEggSpawn(var1, lentity == null ? 0 : lentity.entityId);
 	}
 

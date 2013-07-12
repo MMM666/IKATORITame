@@ -1,4 +1,4 @@
-特定の層に需要がありそうなイカトリテイム ModLoader版 1.5.2 Rev3
+特定の層に需要がありそうなイカトリテイム ModLoader版 1.6.2 Rev1
 
 
 利用条件
@@ -10,7 +10,7 @@
 使い方
 	要Modloader。
 	要MMMLib。
-	%appdata%/.mincraft/modsにZIPのまま放りこめば動くはずです。
+	%appdata%/.mincraft/versions/1.6.2ML/modsにZIPのまま放りこめば動くはずです。
 	%appdata%/.mincraft/config/mod_IKATORITame.cfgができるので設定はそちらで。
 
 
@@ -48,11 +48,12 @@
 
 
 変更点
+	20130713.1	1.6.2 Rev1 更新
+
+
+
 	20130606.1	1.5.2 Rev3 更新
 				マルチ対策かもしれない修正。
-
-
-
 	20130522.1	1.5.2 Rev2 更新
 				Entityの登録方法を変更。
 				置き換えた卵がForge環境で表示されてなかったっぽいのを修正。

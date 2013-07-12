@@ -17,16 +17,15 @@ public class EIT_ItemEgg extends ItemEgg {
 				0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 		
 		if (!pWorld.isRemote) {
-			pWorld.spawnEntityInWorld(new EIT_EntityEgg(pWorld, pEntityplayer));
+			try {
+				EIT_EntityEgg lentity = (EIT_EntityEgg)mod_EIT_IKATORITame.classEggEntity.getConstructor(World.class, EntityLivingBase.class).newInstance(pWorld, pEntityplayer);
+				pWorld.spawnEntityInWorld(lentity);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return pItemstack;
-	}
-
-	@Override
-	public boolean itemInteractionForEntity(ItemStack par1ItemStack,
-			EntityLiving par2EntityLiving) {
-		return super.itemInteractionForEntity(par1ItemStack, par2EntityLiving);
 	}
 
 }

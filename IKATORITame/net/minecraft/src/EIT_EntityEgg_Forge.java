@@ -8,7 +8,7 @@ public class EIT_EntityEgg_Forge extends EIT_EntityEgg implements IThrowableEnti
 		super(world);
 	}
 
-	public EIT_EntityEgg_Forge(World world, EntityLiving entityliving) {
+	public EIT_EntityEgg_Forge(World world, EntityLivingBase entityliving) {
 		super(world, entityliving);
 	}
 

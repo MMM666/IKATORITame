@@ -6,7 +6,7 @@ public class EIT_EntityEgg extends EntityThrowable {
 		super(world);
 	}
 
-	public EIT_EntityEgg(World world, EntityLiving entityliving) {
+	public EIT_EntityEgg(World world, EntityLivingBase entityliving) {
 		super(world, entityliving);
 	}
 

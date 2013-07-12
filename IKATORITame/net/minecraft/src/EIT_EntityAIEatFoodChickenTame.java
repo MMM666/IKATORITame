@@ -28,12 +28,12 @@ public class EIT_EntityAIEatFoodChickenTame extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		if (ownerEntity.health < ownerEntity.getMaxHealth()) {
+		if (ownerEntity.func_110143_aJ() < ownerEntity.func_110138_aP()) {
 			targetEntity = findFood();
 		} else {
 			targetEntity = null;
 		}
-
+		
 		return targetEntity != null;
 	}
 
@@ -79,19 +79,19 @@ public class EIT_EntityAIEatFoodChickenTame extends EntityAIBase {
 		float f = 16F;
 		List list = theWorld.getEntitiesWithinAABB(EntityItem.class,
 				ownerEntity.boundingBox.expand(f, f, f));
-
+		
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Entity entity = (Entity) iterator.next();
 			EntityItem entityitem = (EntityItem) entity;
 			ItemStack litemstack = entityitem.getEntityItem();
-
+			
 			if (litemstack.stackSize > 0
 					&& (litemstack.itemID == Item.wheat.itemID
 					|| litemstack.getItem() instanceof ItemSeeds)) {
 				return entityitem;
 			}
 		}
-
+		
 		return null;
 	}
 

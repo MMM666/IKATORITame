@@ -2,35 +2,26 @@ package net.minecraft.src;
 
 import java.util.List;
 
-public class EIT_EntityChicken extends EntityChicken {
+public class EIT_EntityChicken extends EntityChicken implements EntityOwnable {
 
-	protected final int flag_isTamed		= 4;
+//	protected final int flag_isTamed		= 4;
 	protected final int flag_isIncubate		= 8;
 	protected final int flag_isFullfrontal	= 16;
-	protected final int flag_isHPMax		= 32;
+//	protected final int flag_isHPMax		= 32;
 	
-	
-	private ItemStack incubatoregg;
-	private boolean doGride;
-	private float grideTime;
-	private boolean tamed;
-	private EntityPlayer targetplayer;
-	protected String textureChick;
-	protected String textureChickenFrontal;
-	public boolean fFullFrontal;
-	public float ridingHeight;
+	protected ItemStack incubatoregg;
+	protected boolean doGride;
+	protected float grideTime;
+	protected boolean fFullFrontal;
+
 
 	public EIT_EntityChicken(World world) {
 		super(world);
 		
-		health = 4;
+		setEntityHealth(4F);
 		incubatoregg = null;
 		doGride = false;
 		grideTime = 0.0F;
-		tamed = false;
-		targetplayer = null;
-		textureChick = "/mob/chick.png";
-		textureChickenFrontal = "/mob/chicken_frontal.png";
 		setFullFrontal(false);
 		
 		try {
@@ -42,18 +33,24 @@ public class EIT_EntityChicken extends EntityChicken {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		float f = 0.25F;
 		tasks.addTask(0, new EntityAISwimming(this));
 		tasks.addTask(1, new EIT_EntityAIWaitChickenTame(this));
-		tasks.addTask(2, new EntityAIPanic(this, 0.38F));
-		tasks.addTask(3, new EntityAIMate(this, f));
-		tasks.addTask(4, new EIT_EntityAIEatFoodChickenTame(this, f));
-		tasks.addTask(5, new EIT_EntityAITemptChickenTame(this, 0.25F, Item.seeds.itemID, false, 0.0D));
-		tasks.addTask(6, new EntityAIFollowParent(this, 0.28F));
-		tasks.addTask(7, new EntityAIWander(this, f));
-		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 6F));
+		tasks.addTask(2, new EntityAIPanic(this, 1.4F));
+		tasks.addTask(3, new EntityAIMate(this, 1.0F));
+		tasks.addTask(4, new EIT_EntityAIEatFoodChickenTame(this, 1.0F));
+		tasks.addTask(5, new EIT_EntityAITemptChickenTame(this, 1.0F, Item.seeds.itemID, false, 0.0D));
+		tasks.addTask(6, new EntityAIFollowParent(this, 1.1F));
+		tasks.addTask(7, new EntityAIWander(this, 1.0D));
+		tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		tasks.addTask(9, new EntityAILookIdle(this));
+	}
 
+	protected void func_110147_ax() {
+		super.func_110147_ax();
+		// ç≈ëÂHP
+		this.func_110148_a(SharedMonsterAttributes.field_111267_a).func_111128_a(20.0D);
+		// à⁄ìÆë¨ìx
+//		this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(0.25D);
 	}
 
 	@Override
@@ -65,31 +62,29 @@ public class EIT_EntityChicken extends EntityChicken {
 		// 00010000 : FullFrontal
 		// 00100000 : HPMax
 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
-		// mounted height
-		this.dataWatcher.addObject(17, Integer.valueOf(0));
-	}
-
-	@Override
-	public int getMaxHealth() {
-		return 20;
+		// ownerName
+		this.dataWatcher.addObject(17, "");
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
 		super.writeEntityToNBT(nbttagcompound);
-		nbttagcompound.setBoolean("Tamed", isTamed());
+		nbttagcompound.setString("Owner", getOwnerName());
 		nbttagcompound.setBoolean("FullFrontal", isFullFrontal());
 		nbttagcompound.setInteger("NextEgg", timeUntilNextEgg);
 		if (isIncubator()) {
-			nbttagcompound.setCompoundTag("Incubator", getIncubator()
-					.writeToNBT(new NBTTagCompound()));
+			nbttagcompound.setCompoundTag("Incubator", getIncubator().writeToNBT(new NBTTagCompound()));
 		}
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
 		super.readEntityFromNBT(nbttagcompound);
-		setTamed(nbttagcompound.getBoolean("Tamed"));
+		setOwner(nbttagcompound.getString("Owner"));
+		if (getOwnerName().isEmpty() && nbttagcompound.getBoolean("Tamed")) {
+			// å√Ç¢ÇÃëŒçÙ
+			setOwner("notch");
+		}
 		setFullFrontal(nbttagcompound.getBoolean("FullFrontal"));
 		timeUntilNextEgg = nbttagcompound.getInteger("NextEgg");
 		setIncubator(ItemStack.loadItemStackFromNBT(nbttagcompound.getCompoundTag("Incubator")));
@@ -130,16 +125,9 @@ public class EIT_EntityChicken extends EntityChicken {
 	@Override
 	public double getMountedYOffset() {
 		if (riddenByEntity instanceof EntityPlayer) {
-			return (double) height * 0.90000000000000002D;
+			return (double) height * 0.9D;
 		}
 		return super.getMountedYOffset();
-	}
-
-	@Override
-	public String getTexture() {
-		// Ç–ÇÊÇ±ÇÃÉeÉNÉXÉ`ÉÉÇÕï 
-		return (mod_EIT_IKATORITame.isChickTexture && isChild()) ? textureChick
-				: fFullFrontal ? textureChickenFrontal : texture;
 	}
 
 	@Override
@@ -153,7 +141,7 @@ public class EIT_EntityChicken extends EntityChicken {
 		for (int k = 0; k < j; k++) {
 			dropItem(Item.feather.itemID, 1);
 		}
-
+		
 		if (isBurning()) {
 			dropItem(Item.chickenCooked.itemID, 1);
 		} else {
@@ -167,11 +155,6 @@ public class EIT_EntityChicken extends EntityChicken {
 	@Override
 	public EntityChicken spawnBabyAnimal(EntityAgeable par1EntityAgeable) {
 		return new EIT_EntityChicken(worldObj);
-	}
-
-	@Override
-	public boolean isAIEnabled() {
-		return true;
 	}
 
 	@Override
@@ -245,9 +228,10 @@ public class EIT_EntityChicken extends EntityChicken {
 						if (isTamed()) {
 							showLoveOrHappyFX(false);
 						} else {
-							setTamed(true);
 							showLoveOrHappyFX(true);
 						}
+						// êKåy
+						setOwner(entityplayer.username);
 					}
 					return true;
 				}
@@ -321,7 +305,7 @@ public class EIT_EntityChicken extends EntityChicken {
 				dropItem(Item.egg.itemID, 1);
 				// ÉâÉCÉtÇ™ëΩÇ¢Ç∆éYÇ›Ç™Ç¢Ç¢
 				if (setNextLayEgg()) {
-					health--;
+					heal(-1);
 				}
 			}
 			// âHÇ™ê∂Ç¶ÇΩ
@@ -332,7 +316,7 @@ public class EIT_EntityChicken extends EntityChicken {
 			// System.out.println(String.format("%d", getGrowingAge()));
 			//
 		}
-		if (grideTime < (float) (health * 2)) {
+		if (grideTime < (func_110143_aJ() * 2F)) {
 			grideTime += 0.3F;
 		} else {
 			doGride = true;
@@ -434,11 +418,21 @@ public class EIT_EntityChicken extends EntityChicken {
 
 	// éîÇ¢äµÇÁÇµ
 	public boolean isTamed() {
-		return getMyFlag(flag_isTamed);
+		return !getOwnerName().isEmpty();
 	}
 
-	public void setTamed(boolean flag) {
-		setMyFlag(flag_isTamed, flag);
+	@Override
+	public String getOwnerName() {
+		return dataWatcher.getWatchableObjectString(17);
+	}
+
+	public void setOwner(String par1Str) {
+		this.dataWatcher.updateObject(17, par1Str);
+	}
+
+	@Override
+	public Entity getOwner() {
+		return this.worldObj.getPlayerEntityByName(this.getOwnerName());
 	}
 
 	public boolean isShitting() {
@@ -482,22 +476,6 @@ public class EIT_EntityChicken extends EntityChicken {
 		setMyFlag(flag_isFullfrontal, flag);
 	}
 
-	public boolean isHPMax() {
-		return getMyFlag(flag_isHPMax);
-	}
-
-	public boolean updateHPMax() {
-		if (worldObj == null) return false;
-		if (worldObj.isRemote) {
-			return isHPMax();
-		}
-		boolean lflag = health >= getMaxHealth();
-		if (getMyFlag(flag_isHPMax) != lflag) {
-			setMyFlag(flag_isHPMax, lflag);
-		}
-		return lflag;
-	}
-
 	public boolean getMyFlag(int pindex) {
 		return (this.dataWatcher.getWatchableObjectByte(16) & pindex) != 0;
 	}
@@ -518,7 +496,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	}
 
 	public boolean eatBeans() {
-		if (attackTime > 0 || isHPMax()) {
+		if (attackTime > 0 || func_110143_aJ() >= func_110138_aP()) {
 			return false;
 		}
 		if (isChild() || isFullFrontal()) {
@@ -537,8 +515,8 @@ public class EIT_EntityChicken extends EntityChicken {
 	public boolean setNextLayEgg() {
 		// óëÇéYÇﬁä‘äu
 		timeUntilNextEgg = rand.nextInt(6000) + 6000;
-		if (health > 4) {
-			timeUntilNextEgg = (16 * timeUntilNextEgg) / (5 * health - 4);
+		if (func_110143_aJ() > 4F) {
+			timeUntilNextEgg = (16 * timeUntilNextEgg) / (int)(5F * func_110143_aJ() - 4F);
 			return true;
 		} else {
 			return false;
@@ -551,20 +529,7 @@ public class EIT_EntityChicken extends EntityChicken {
 	@Override
 	public void onUpdate() {
 		fFullFrontal = isFullFrontal();
-		if (!worldObj.isRemote) {
-			// Server
-			if (ridingEntity != null) {
-				if (ridingEntity.height != ridingHeight) {
-					ridingHeight = ridingEntity.height;
-					dataWatcher.updateObject(17, Float.floatToIntBits(ridingHeight));
-				}
-			}
-		} else {
-			ridingHeight = Float.intBitsToFloat(dataWatcher.getWatchableObjectInt(17));
-		}
-		updateHPMax();
 		super.onUpdate();
-		updateHPMax();
 	}
 
 	/*
