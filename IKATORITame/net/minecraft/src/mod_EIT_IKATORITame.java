@@ -35,13 +35,13 @@ public class mod_EIT_IKATORITame extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.6.2-1";
+		return "1.6.2-2";
 	}
 
 	@Override
 	public void load() {
 		// MMMLibのRevisionチェック
-		MMM_Helper.checkRevision("1");
+		MMM_Helper.checkRevision("3");
 		
 		if (isReplaceSquid) {
 			// イカの置き換え
